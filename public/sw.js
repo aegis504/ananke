@@ -1,1 +1,28 @@
-c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgKCkgPT4gc2VsZi5za2lwV2FpdGluZygpKTsKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdhY3RpdmF0ZScsIChlKSA9PiBlLndhaXRVbnRpbChjbGllbnRzLmNsYWltKCkpKTsKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdwdXNoJywgKGUpID0+IHsKICBjb25zdCBkID0gZS5kYXRhID8gZS5kYXRhLmpzb24oKSA6IHt9OwogIGUud2FpdFVudGlsKHNlbGYucmVnaXN0cmF0aW9uLnNob3dOb3RpZmljYXRpb24oZC50aXRsZSB8fCAnQW5hbmtlJywgewogICAgYm9keTogZC5ib2R5IHx8ICdUYXNrIG5lZWRzIGF0dGVudGlvbiEnLAogICAgaWNvbjogJy9hbmFua2UtaWNvbi5wbmcnLAogICAgdGFnOiBkLnRhZyB8fCAnYW5hbmtlJywKICAgIHJlcXVpcmVJbnRlcmFjdGlvbjogZC51cmdlbnQgfHwgZmFsc2UsCiAgICB2aWJyYXRlOiBkLnVyZ2VudCA/IFsyMDAsMTAwLDIwMCwxMDAsMjAwXSA6IFsyMDAsMTAwLDIwMF0sCiAgICBkYXRhOiB7IHVybDogJy8nLCB0YXNrSWQ6IGQudGFza0lkIH0sCiAgICBhY3Rpb25zOiBbeyBhY3Rpb246ICdjb21wbGV0ZScsIHRpdGxlOiAn4pyFIENvbXBsZXRlJyB9LCB7IGFjdGlvbjogJ3Nub296ZScsIHRpdGxlOiAn4o+wIDUgbWluJyB9XQogIH0pKTsKfSk7CnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignbm90aWZpY2F0aW9uY2xpY2snLCAoZSkgPT4gewogIGUubm90aWZpY2F0aW9uLmNsb3NlKCk7CiAgY29uc3QgYWN0aW9uID0gZS5hY3Rpb247CiAgY29uc3QgdGFza0lkID0gZS5ub3RpZmljYXRpb24uZGF0YT8udGFza0lkOwogIGUud2FpdFVudGlsKGNsaWVudHMubWF0Y2hBbGwoeyB0eXBlOiAnd2luZG93JyB9KS50aGVuKGNzID0+IHsKICAgIC8vIE9ubHkgc2VuZCBDT01QTEVURV9UQVNLIHdoZW4gdXNlciBleHBsaWNpdGx5IGNsaWNrcyAiQ29tcGxldGUiIGFjdGlvbgogICAgaWYgKGFjdGlvbiA9PT0gJ2NvbXBsZXRlJyAmJiB0YXNrSWQpIHsKICAgICAgY3MuZm9yRWFjaChjID0+IGMucG9zdE1lc3NhZ2UoeyB0eXBlOiAnQ09NUExFVEVfVEFTSycsIHRhc2tJZCB9KSk7CiAgICB9CiAgICAvLyBKdXN0IGZvY3VzIHRoZSB3aW5kb3cgZm9yIGFueSBjbGljawogICAgaWYgKGNzLmxlbmd0aCA+IDApIGNzWzBdLmZvY3VzKCk7CiAgICBlbHNlIGNsaWVudHMub3BlbldpbmRvdygnLycpOwogIH0pKTsKfSk7Cg==
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
+self.addEventListener('push', (e) => {
+  const d = e.data ? e.data.json() : {};
+  e.waitUntil(self.registration.showNotification(d.title || 'Ananke', {
+    body: d.body || 'Task needs attention!',
+    icon: '/ananke-icon.png',
+    tag: d.tag || 'ananke',
+    requireInteraction: d.urgent || false,
+    vibrate: d.urgent ? [200,100,200,100,200] : [200,100,200],
+    data: { url: '/', taskId: d.taskId },
+    actions: [{ action: 'complete', title: '✅ Complete' }, { action: 'snooze', title: '⏰ 5 min' }]
+  }));
+});
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  const action = e.action;
+  const taskId = e.notification.data?.taskId;
+  e.waitUntil(clients.matchAll({ type: 'window' }).then(cs => {
+    // Only send COMPLETE_TASK when user explicitly clicks "Complete" action
+    if (action === 'complete' && taskId) {
+      cs.forEach(c => c.postMessage({ type: 'COMPLETE_TASK', taskId }));
+    }
+    // Just focus the window for any click
+    if (cs.length > 0) cs[0].focus();
+    else clients.openWindow('/');
+  }));
+});

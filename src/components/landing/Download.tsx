@@ -1,13 +1,47 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '../ui/Button'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
 const platforms = [
   { icon: '🍎', name: 'macOS', note: 'Apple Silicon & Intel' },
   { icon: '🪟', name: 'Windows', note: 'Windows 10+' },
   { icon: '📱', name: 'iOS', note: 'iPhone & iPad' },
-  { icon: '🤖', name: 'Android', note: 'Android 12+' },
+  { icon: '🤖', name: 'Android', note: 'Android 8+' },
 ]
 
 export function Download() {
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [installed, setInstalled] = useState(false)
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setInstallPrompt(e as BeforeInstallPromptEvent)
+    }
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('appinstalled', () => setInstalled(true))
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+    }
+  }, [])
+
+  const handleAndroidInstall = async () => {
+    if (installPrompt) {
+      await installPrompt.prompt()
+      const { outcome } = await installPrompt.userChoice
+      if (outcome === 'accepted') setInstalled(true)
+      setInstallPrompt(null)
+    } else {
+      // Fallback — open instructions
+      alert('To install: open ananke.vercel.app in Chrome → tap the menu (⋮) → "Add to Home Screen"')
+    }
+  }
+
   return (
     <section id="download" className="py-24 px-6">
       <div className="mx-auto max-w-[860px]">
@@ -26,8 +60,12 @@ export function Download() {
                 <a href="https://github.com/aegis504/ananke/releases/latest/download/Ananke_Setup.exe" download className="mt-4 w-full">
                   <Button variant="premium" size="sm" className="w-full">Download App</Button>
                 </a>
+              ) : p.name === 'Android' ? (
+                <Button variant="premium" size="sm" className="mt-4 w-full" onClick={handleAndroidInstall}>
+                  {installed ? '✅ Installed!' : installPrompt ? 'Install App' : 'Add to Home Screen'}
+                </Button>
               ) : p.name === 'iOS' ? (
-                <a href="#" onClick={e => { e.preventDefault(); alert('iOS App coming soon!'); }} className="mt-4 w-full">
+                <a href="#" onClick={e => { e.preventDefault(); alert('On iPhone: open ananke.vercel.app in Safari → tap Share (□↑) → "Add to Home Screen"') }} className="mt-4 w-full">
                   <Button variant="premium" size="sm" className="w-full bg-[#00a82d] hover:bg-[#00a82d]/80 text-white border-transparent">Get iOS App</Button>
                 </a>
               ) : (
@@ -36,6 +74,11 @@ export function Download() {
             </motion.div>
           ))}
         </div>
+
+        {/* PWA tip */}
+        <p className="mt-8 text-center text-[13px] text-text-muted">
+          📱 Android & iOS: install directly from your browser — no app store needed.
+        </p>
       </div>
     </section>
   )
