@@ -173,11 +173,11 @@ export function TasksPage({ tasks, loading, onAddTask, onCompleteTask, onDeleteT
       </div>
 
       {/* Tabs + Search */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex gap-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div className="flex gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {(['All', 'Today', 'Upcoming', 'Completed'] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`px-4 py-2 rounded-lg text-[15px] font-medium cursor-pointer transition-colors ${tab === t ? 'bg-bg-card border border-border text-text shadow-sm' : 'text-text-muted hover:text-text hover:bg-bg-alt'}`}>
+              className={`px-4 py-2 rounded-lg text-[15px] font-medium cursor-pointer transition-colors whitespace-nowrap ${tab === t ? 'bg-bg-card border border-border text-text shadow-sm' : 'text-text-muted hover:text-text hover:bg-bg-alt'}`}>
               {t}
               {t === 'Today' && (overdue.length + todayTasks.length) > 0 && (
                 <span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-danger/10 text-danger text-[13px] font-semibold">{overdue.length + todayTasks.length}</span>
@@ -185,10 +185,10 @@ export function TasksPage({ tasks, loading, onAddTask, onCompleteTask, onDeleteT
             </button>
           ))}
         </div>
-        <div className="relative">
+        <div className="relative w-full sm:w-auto">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
           <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search tasks..."
-            className="pl-9 pr-4 py-2 rounded-xl border border-border bg-bg-input text-[15px] text-text w-44 focus:outline-none focus:border-primary placeholder:text-text-muted transition-all" />
+            className="pl-9 pr-4 py-2 rounded-xl border border-border bg-bg-input text-[15px] text-text w-full sm:w-44 focus:outline-none focus:border-primary placeholder:text-text-muted transition-all" />
         </div>
       </div>
 

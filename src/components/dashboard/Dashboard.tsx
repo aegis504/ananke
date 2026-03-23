@@ -207,7 +207,7 @@ export function Dashboard({ user, onSignOut, initialPage, onPageChange }: Props)
               {showNotifs && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setShowNotifs(false)} />
-                  <div className="absolute right-0 top-10 w-80 bg-bg-card border border-border rounded-xl shadow-2xl z-50 overflow-hidden">
+                  <div className="absolute right-0 top-10 w-80 max-w-[calc(100vw-1.5rem)] bg-bg-card border border-border rounded-xl shadow-2xl z-50 overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-border">
                       <h3 className="text-base font-semibold text-text">Notifications</h3>
                       <div className="flex items-center gap-2">
@@ -328,8 +328,9 @@ export function Dashboard({ user, onSignOut, initialPage, onPageChange }: Props)
               { icon: <Users size={18} />, p: 'shared' as Page, label: 'Shared' },
               { icon: <Settings size={18} />, p: 'settings' as Page, label: 'Settings' },
               { icon: <Search size={18} />, p: null as unknown as Page, label: 'Search' },
+              { icon: <Sparkles size={18} />, p: null as unknown as Page, label: 'AI' },
             ].map(item => (
-              <button key={item.label} onClick={() => { if (item.label === 'Search') { setShowSearch(true) } else { setPage(item.p) }; setShowMobileMenu(false) }}
+              <button key={item.label} onClick={() => { if (item.label === 'Search') { setShowSearch(true) } else if (item.label === 'AI') { setShowAI(true) } else { setPage(item.p) }; setShowMobileMenu(false) }}
                 className="flex flex-col items-center gap-1.5 py-3 rounded-xl cursor-pointer text-text-muted hover:text-text hover:bg-bg-alt transition-colors">
                 {item.icon}
                 <span className="text-[11px] font-medium">{item.label}</span>

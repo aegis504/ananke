@@ -75,8 +75,8 @@ export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDele
           <div>
             <div className="flex items-center gap-3 px-3 py-2 text-[13px] font-medium text-text-muted uppercase tracking-wider border-b border-border">
               <span className="flex-1">Title</span>
-              <span className="w-32 text-right">Updated</span>
-              <span className="w-20 text-right">Tags</span>
+              <span className="hidden sm:block w-32 text-right">Updated</span>
+              <span className="w-16 sm:w-20 text-right">Tags</span>
             </div>
             {nbNotes.map(n => (
               <div key={n.id} onClick={() => onNavigate('notes')} className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-bg-alt cursor-pointer transition-colors">
@@ -85,8 +85,8 @@ export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDele
                   <p className="text-[15px] font-medium text-text truncate">{n.title || 'Untitled'}</p>
                   <p className="text-[13px] text-text-muted truncate">{n.content || 'No content'}</p>
                 </div>
-                <span className="w-32 text-right text-[13px] text-text-muted">{fmtDate(n.updated_at)}</span>
-                <span className="w-20 text-right text-[13px] text-text-muted">{n.tags?.length || 0}</span>
+                <span className="hidden sm:block w-32 text-right text-[13px] text-text-muted">{fmtDate(n.updated_at)}</span>
+                <span className="w-16 sm:w-20 text-right text-[13px] text-text-muted">{n.tags?.length || 0}</span>
               </div>
             ))}
           </div>

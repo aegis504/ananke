@@ -77,7 +77,7 @@ export function AuthPage({ mode, onNavigate }: Props) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-bg">
-      <button onClick={() => onNavigate('landing')} className="absolute top-5 left-5 text-text-muted hover:text-text transition-colors cursor-pointer"><ArrowLeft size={18} /></button>
+      <button onClick={() => onNavigate('landing')} className="absolute top-4 left-4 p-2.5 rounded-xl text-text-muted hover:text-text hover:bg-bg-alt transition-colors cursor-pointer"><ArrowLeft size={18} /></button>
 
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-[380px]">
         <div className="flex items-center gap-2 mb-8">

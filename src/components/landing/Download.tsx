@@ -15,7 +15,7 @@ export function Download() {
           <h2 className="text-[28px] font-semibold tracking-[-0.03em] text-text">Available everywhere</h2>
           <p className="mt-3 text-base text-text-secondary">Your notes and tasks sync across every device.</p>
         </div>
-        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {platforms.map((p, i) => (
             <motion.div key={p.name} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
               className="bg-bg-card border border-border rounded-xl p-5 text-center flex flex-col items-center">
