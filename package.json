@@ -1,0 +1,72 @@
+{
+	"name": "ananke-app",
+	"private": true,
+	"version": "1.0.0",
+	"type": "module",
+	"main": "electron/main.js",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"preview": "vite preview",
+		"electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
+		"electron:build": "electron-builder --win",
+		"electron:build:all": "electron-builder --win --mac --linux"
+	},
+	"dependencies": {
+		"@supabase/supabase-js": "^2.99.3",
+		"clsx": "^2.1.1",
+		"framer-motion": "^12.38.0",
+		"lucide-react": "^0.577.0",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
+		"tailwind-merge": "^3.5.0"
+	},
+	"devDependencies": {
+		"@tailwindcss/vite": "^4.2.2",
+		"@types/react": "^19.2.14",
+		"@types/react-dom": "^19.2.3",
+		"@vitejs/plugin-react": "^6.0.1",
+		"concurrently": "^9.2.1",
+		"electron": "^37.7.0",
+		"electron-builder": "^26.0.12",
+		"png2icons": "^2.0.1",
+		"tailwindcss": "^4.2.2",
+		"typescript": "~5.9.3",
+		"vite": "^8.0.1",
+		"wait-on": "^8.0.5"
+	},
+	"build": {
+		"appId": "com.ananke.app",
+		"productName": "Ananke",
+		"directories": {
+			"output": "release"
+		},
+		"win": {
+			"target": [
+				"nsis"
+			],
+			"icon": "public/icon.ico"
+		},
+		"nsis": {
+			"oneClick": false,
+			"allowToChangeInstallationDirectory": true,
+			"createDesktopShortcut": true,
+			"createStartMenuShortcut": true,
+			"shortcutName": "Ananke"
+		},
+		"mac": {
+			"target": [
+				"dmg"
+			],
+			"icon": "public/icon-512.png",
+			"category": "public.app-category.productivity"
+		},
+		"linux": {
+			"target": [
+				"AppImage"
+			],
+			"icon": "public/icon-512.png",
+			"category": "Office"
+		}
+	}
+}

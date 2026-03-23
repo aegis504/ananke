@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+
+release/
+build/
+*.cjs
+
