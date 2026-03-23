@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ananke</string>
+    <string name="title_activity_main">Ananke</string>
+    <string name="package_name">app.ananke.productivity</string>
+    <string name="custom_url_scheme">app.ananke.productivity</string>
+</resources>

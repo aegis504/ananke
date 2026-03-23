@@ -61,9 +61,14 @@ export function Download() {
                   <Button variant="premium" size="sm" className="w-full">Download App</Button>
                 </a>
               ) : p.name === 'Android' ? (
-                <Button variant="premium" size="sm" className="mt-4 w-full" onClick={handleAndroidInstall}>
-                  {installed ? '✅ Installed!' : installPrompt ? 'Install App' : 'Add to Home Screen'}
-                </Button>
+                <div className="mt-4 w-full flex flex-col gap-2">
+                  <a href="https://github.com/aegis504/ananke/releases/latest/download/app-debug.apk" download className="w-full">
+                    <Button variant="premium" size="sm" className="w-full">Download APK</Button>
+                  </a>
+                  <Button variant="ghost" size="sm" className="w-full text-[12px]" onClick={handleAndroidInstall}>
+                    {installed ? '✅ Installed' : 'Install from Browser'}
+                  </Button>
+                </div>
               ) : p.name === 'iOS' ? (
                 <a href="#" onClick={e => { e.preventDefault(); alert('On iPhone: open ananke.vercel.app in Safari → tap Share (□↑) → "Add to Home Screen"') }} className="mt-4 w-full">
                   <Button variant="premium" size="sm" className="w-full bg-[#00a82d] hover:bg-[#00a82d]/80 text-white border-transparent">Get iOS App</Button>

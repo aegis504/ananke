@@ -13,6 +13,9 @@
 		"electron:build:all": "electron-builder --win --mac --linux"
 	},
 	"dependencies": {
+		"@capacitor/android": "^8.2.0",
+		"@capacitor/cli": "^8.2.0",
+		"@capacitor/core": "^8.2.0",
 		"@supabase/supabase-js": "^2.99.3",
 		"clsx": "^2.1.1",
 		"framer-motion": "^12.38.0",
