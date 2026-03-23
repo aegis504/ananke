@@ -37,10 +37,11 @@ export function TasksPage({ tasks, loading, onAddTask, onCompleteTask, onDeleteT
   const upcoming = active.filter(t => new Date(t.deadline) > todayEnd)
 
   // Filter by tab
-  let displayTasks = tasks
-  if (tab === 'Today') displayTasks = [...overdue, ...todayTasks]
-  else if (tab === 'Upcoming') displayTasks = upcoming
-  else if (tab === 'Completed') displayTasks = completed
+  let displayTasks = tab === 'All'
+    ? [...overdue, ...todayTasks, ...upcoming, ...completed]  // All: sorted by urgency, new tasks always visible
+    : tab === 'Today' ? [...overdue, ...todayTasks]
+    : tab === 'Upcoming' ? upcoming
+    : completed
 
   // Search filter
   if (search.trim()) {

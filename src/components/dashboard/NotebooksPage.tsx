@@ -13,6 +13,8 @@ interface Props {
   onNavigate: (page: string) => void
 }
 
+const fmtDate = (s: string | null | undefined) => { if (!s) return 'Just now'; const d = new Date(s); return isNaN(d.getTime()) ? 'Just now' : d.toLocaleDateString() }
+
 export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDeleteNotebook, onNavigate }: Props) {
   const [showCreate, setShowCreate] = useState(false)
   const [selectedNb, setSelectedNb] = useState<string | null>(null)
@@ -37,7 +39,7 @@ export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDele
           </div>
           <div>
             <h1 className="text-[32px] font-bold text-text">{selectedNotebook.name}</h1>
-            <p className="text-[13px] text-text-muted">{nbNotes.length} notes · Updated {new Date(selectedNotebook.updated_at).toLocaleDateString()}</p>
+            <p className="text-[13px] text-text-muted">{nbNotes.length} notes · Updated {fmtDate(selectedNotebook.updated_at)}</p>
           </div>
           <div className="ml-auto flex items-center gap-2">
             <button onClick={() => onNavigate('notes')} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[15px] text-primary font-medium border border-primary/20 hover:bg-primary-light cursor-pointer">
@@ -83,7 +85,7 @@ export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDele
                   <p className="text-[15px] font-medium text-text truncate">{n.title || 'Untitled'}</p>
                   <p className="text-[13px] text-text-muted truncate">{n.content || 'No content'}</p>
                 </div>
-                <span className="w-32 text-right text-[13px] text-text-muted">{new Date(n.updated_at).toLocaleDateString()}</span>
+                <span className="w-32 text-right text-[13px] text-text-muted">{fmtDate(n.updated_at)}</span>
                 <span className="w-20 text-right text-[13px] text-text-muted">{n.tags?.length || 0}</span>
               </div>
             ))}
