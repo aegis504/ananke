@@ -23,7 +23,7 @@ export function Download() {
               <h3 className="text-[15px] font-semibold text-text">{p.name}</h3>
               <p className="text-[13px] text-text-muted mt-1">{p.note}</p>
               {p.name === 'Windows' ? (
-                <a href="/download/Ananke-Setup.exe" className="mt-4 w-full">
+                <a href="https://github.com/aegis504/ananke/releases/latest/download/Ananke-Setup.exe" download className="mt-4 w-full">
                   <Button variant="premium" size="sm" className="w-full">Download App</Button>
                 </a>
               ) : p.name === 'iOS' ? (

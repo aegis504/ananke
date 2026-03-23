@@ -7,9 +7,10 @@ import { OnboardingFlow } from './components/onboarding/OnboardingFlow'
 import { Dashboard } from './components/dashboard/Dashboard'
 import { SharedViewPage } from './components/dashboard/SharedViewPage'
 import { ForJudgesPage } from './components/ForJudgesPage'
+import { AdminPage } from './components/dashboard/AdminPage'
 import { supabase } from './lib/supabase'
 
-type View = 'landing' | 'signin' | 'signup' | 'onboarding' | 'dashboard' | 'shared' | 'judges'
+type View = 'landing' | 'signin' | 'signup' | 'onboarding' | 'dashboard' | 'shared' | 'judges' | 'admin'
 interface ProfileRow { intent: string | null }
 
 // Map URL paths to dashboard pages
@@ -37,6 +38,7 @@ function getInitialState(): { view: View; sharedId: string | null; dashPage: str
   const shared = params.get('shared')
 
   if (shared) return { view: 'shared', sharedId: shared, dashPage: null }
+  if (path === '/admin') return { view: 'admin', sharedId: null, dashPage: null }
   if (path === '/judges' || path === '/for-judges') return { view: 'judges', sharedId: null, dashPage: null }
   if (path === '/signin' || path === '/login') return { view: 'signin', sharedId: null, dashPage: null }
   if (path === '/signup' || path === '/register') return { view: 'signup', sharedId: null, dashPage: null }
@@ -109,6 +111,7 @@ function App() {
       {(view === 'signin' || view === 'signup') && <motion.div key="a" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><AuthPage mode={view} onNavigate={(v: string) => navigate(v as View)} /></motion.div>}
       {view === 'onboarding' && user && <motion.div key="o" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><OnboardingFlow userId={user.id} onComplete={() => navigate('dashboard', 'home')} /></motion.div>}
       {view === 'dashboard' && user && <motion.div key="d" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}><Dashboard user={user} onSignOut={signOut} onNavigate={(v: string) => navigate(v as View)} initialPage={initialPage || undefined} onPageChange={(p: string) => { if (PAGE_TO_PATH[p]) window.history.replaceState(null, '', PAGE_TO_PATH[p]) }} /></motion.div>}
+      {view === 'admin' && <motion.div key="admin" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}><AdminPage /></motion.div>}
     </AnimatePresence>
   )
 }
