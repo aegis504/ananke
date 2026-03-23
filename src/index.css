@@ -32,7 +32,7 @@
   --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', ui-monospace, monospace;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -42,6 +42,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   letter-spacing: -0.01em;
+  overflow-x: hidden;
 }
 
 html.dark {

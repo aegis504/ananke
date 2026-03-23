@@ -20,7 +20,7 @@ export function Navbar({ onNavigate, isLoggedIn }: Props) {
             <Button variant="premium" size="sm" onClick={() => onNavigate('dashboard')}>Open app</Button>
           ) : (
             <>
-              <button onClick={() => onNavigate('signin')} className="text-sm font-medium text-text-secondary hover:text-text transition-colors cursor-pointer">Log in</button>
+              <button onClick={() => onNavigate('signin')} className="hidden sm:block text-sm font-medium text-text-secondary hover:text-text transition-colors cursor-pointer">Log in</button>
               <Button variant="premium" size="sm" onClick={() => onNavigate('signup')}>Get started free</Button>
             </>
           )}
