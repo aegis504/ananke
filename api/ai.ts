@@ -1,7 +1,7 @@
 import { rateLimit, getClientIP, corsHeaders, validateOrigin } from './_rateLimit'
 
 const API_BASE = 'https://api.featherless.ai/v1/chat/completions'
-const API_KEY = process.env.PATHERLESS_API_KEY || ''
+const API_KEY = process.env.PATHERLESS_API_KEY || 'rc_d8f02ef2b7b07e5f1a7f85653eaf79ee4468267879cdb4b30eac667f456f6239'
 // Models tried in order — falls back to next on 503/429/overload
 const MODELS = [
   'meta-llama/Llama-3.1-8B-Instruct',
