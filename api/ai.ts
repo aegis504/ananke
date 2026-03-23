@@ -2,7 +2,14 @@ import { rateLimit, getClientIP, corsHeaders, validateOrigin } from './_rateLimi
 
 const API_BASE = 'https://api.featherless.ai/v1/chat/completions'
 const API_KEY = process.env.PATHERLESS_API_KEY || ''
-const MODEL = 'Qwen/Qwen2.5-7B-Instruct'
+// Models tried in order — falls back to next on 503/429/overload
+const MODELS = [
+  'meta-llama/Llama-3.1-8B-Instruct',
+  'mistralai/Mistral-7B-Instruct-v0.3',
+  'google/gemma-2-9b-it',
+  'Qwen/Qwen2.5-7B-Instruct',
+  'microsoft/Phi-3-mini-4k-instruct',
+]
 const VALID_ACTIONS = new Set(['summarize', 'quiz', 'improve', 'explain', 'keypoints', 'translate_es', 'translate_fr', 'actionitems', 'expand', 'simplify', 'dehumanize', 'humanize', 'chat'])
 
 export const config = { runtime: 'edge' }
@@ -111,46 +118,46 @@ Only output the rewritten text:\n\n${safeContent}`,
     let response: Response | null = null;
     let fallbackError: any = null;
     let apiErrorData: any = null;
+    let usedModel = MODELS[0];
 
-    for (const key of API_KEYS) {
-      try {
-        response = await fetch(API_BASE, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${key}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: model || MODEL,
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: userPrompt },
-            ],
-            max_tokens: 2000,
-            temperature: 0.7,
-          }),
-        })
-
-        if (response.ok) {
-          break; // success
-        }
-
-        const errText = await response.text()
+    // Try each model in order; skip to next model on 503/429 (capacity/rate limit)
+    outer: for (const tryModel of (model ? [model, ...MODELS] : MODELS)) {
+      for (const key of API_KEYS) {
         try {
-          apiErrorData = JSON.parse(errText);
-        } catch {
-          apiErrorData = { error: errText };
-        }
+          response = await fetch(API_BASE, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${key}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: tryModel,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt },
+              ],
+              max_tokens: 2000,
+              temperature: 0.7,
+            }),
+          })
 
-        if (response.status === 400 || response.status === 401 || response.status === 403) {
-          // Could be invalid key (401/403), fallback might help. 
-          // If 400 bad request, it won't help to change key, but safety first.
-          // Wait, if it's 400 bad request (prompt issue), changing API key won't fix it.
-          if (response.status === 400) break;
-        }
+          if (response.ok) {
+            usedModel = tryModel;
+            break outer; // success — stop all loops
+          }
 
-      } catch (err) {
-        fallbackError = err;
+          const errText = await response.text()
+          try { apiErrorData = JSON.parse(errText) } catch { apiErrorData = { error: errText } }
+
+          // 503/429 = model at capacity → try next model
+          if (response.status === 503 || response.status === 429) continue outer;
+          // 400 = bad request (won't be fixed by switching model/key)
+          if (response.status === 400) break outer;
+          // 401/403 = bad key → try next key for this model
+
+        } catch (err) {
+          fallbackError = err;
+        }
       }
     }
 
@@ -164,7 +171,7 @@ Only output the rewritten text:\n\n${safeContent}`,
     const data = await response.json()
     const result = data.choices?.[0]?.message?.content || 'No response generated.'
 
-    return new Response(JSON.stringify({ result, model: data.model, usage: data.usage }), { status: 200, headers: cors })
+    return new Response(JSON.stringify({ result, model: data.model || usedModel, usage: data.usage }), { status: 200, headers: cors })
   } catch (err) {
     return new Response(JSON.stringify({ error: err instanceof Error ? err.message : 'Internal error' }), { status: 500, headers: cors })
   }
