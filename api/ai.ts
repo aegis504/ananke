@@ -1,7 +1,13 @@
 import { rateLimit, getClientIP, corsHeaders, validateOrigin } from './_rateLimit'
 
 const API_BASE = 'https://api.featherless.ai/v1/chat/completions'
-const API_KEY = process.env.PATHERLESS_API_KEY || 'rc_d8f02ef2b7b07e5f1a7f85653eaf79ee4468267879cdb4b30eac667f456f6239'
+// Two Featherless keys — rotated on 429/quota errors
+const FEATHERLESS_KEYS = [
+  process.env.FEATHERLESS_API_KEY_1 || 'rc_1f70f96604092baca9575582f958c64f1faa04c011e4314e15c0483ba868542a',
+  process.env.FEATHERLESS_API_KEY_2 || 'rc_1c6550991843f0af537c6597c0169ef4ab71d93bec97b5bd4470c69177ea66fa',
+]
+// Google Gemini key (fallback if Featherless is down)
+const GEMINI_KEY = process.env.GEMINI_API_KEY || 'AIzaSyCCx7s_3ts9CePmGAGhRQZkIOf8L7rBf1Y'
 // Models tried in order — falls back to next on 503/429/overload
 const MODELS = [
   'meta-llama/Llama-3.1-8B-Instruct',
@@ -105,11 +111,7 @@ Only output the rewritten text:\n\n${safeContent}`,
       : 'You are a helpful AI assistant integrated into a note-taking app called Ananke. Be concise, clear, and format your output in clean markdown.'
     const userPrompt = prompts[action] || content
 
-    const API_KEYS = [
-      process.env.AI_API_KEY_1,
-      process.env.AI_API_KEY_2,
-      API_KEY
-    ].filter(Boolean) as string[]
+    const API_KEYS = FEATHERLESS_KEYS.filter(Boolean) as string[]
 
     if (API_KEYS.length === 0) {
       return new Response(JSON.stringify({ error: 'No AI API keys configured' }), { status: 500, headers: cors })
