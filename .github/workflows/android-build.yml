@@ -54,6 +54,9 @@ jobs:
           path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
 
+      - name: Rename APK for Release
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk android/app/build/outputs/apk/debug/Ananke.apk
+
       - name: Create Release with APK
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main'
@@ -65,7 +68,7 @@ jobs:
             Auto-built from latest main branch.
             **Install:** Download and open `Ananke.apk` on your Android device.
             > You may need to enable "Install from unknown sources" in Android settings.
-          files: android/app/build/outputs/apk/debug/app-debug.apk
+          files: android/app/build/outputs/apk/debug/Ananke.apk
           target_commitish: main
           make_latest: false
         env:

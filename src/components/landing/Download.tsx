@@ -62,7 +62,7 @@ export function Download() {
                 </a>
               ) : p.name === 'Android' ? (
                 <div className="mt-4 w-full flex flex-col gap-2">
-                  <a href="https://github.com/aegis504/ananke/releases/download/android-latest/app-debug.apk" className="w-full">
+                  <a href="https://github.com/aegis504/ananke/releases/download/android-latest/Ananke.apk" className="w-full">
                     <Button variant="premium" size="sm" className="w-full">Download APK</Button>
                   </a>
                   <Button variant="ghost" size="sm" className="w-full text-[12px]" onClick={handleAndroidInstall}>
