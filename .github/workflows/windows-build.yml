@@ -1,0 +1,51 @@
+name: Build Windows EXE
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Build Electron installer
+        run: npx electron-builder --win --publish never
+
+      - name: Rename installer
+        run: |
+          $src = Get-ChildItem release\*.exe | Select-Object -First 1
+          Move-Item $src.FullName "release\Ananke_Setup.exe" -Force
+
+      - name: Create Release with EXE
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: windows-latest
+          name: Ananke Windows (Latest)
+          body: |
+            ## Ananke Windows App
+            Auto-built from latest main branch.
+            **Install:** Download and run `Ananke_Setup.exe`.
+          files: release/Ananke_Setup.exe
+          target_commitish: main
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
