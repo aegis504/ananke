@@ -21,8 +21,30 @@ export function useAuth() {
     return { data, error: error as AuthError | null }
   }
   const signInWithGoogle = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } })
-    return { data, error: error as AuthError | null }
+    // Detect if we're running inside the Electron desktop app
+    const isElectron = navigator.userAgent.toLowerCase().includes('electron')
+
+    if (isElectron) {
+      // Desktop: Get the URL, redirect back via deep link, and open in external default browser
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: 'ananke://auth/callback',
+          skipBrowserRedirect: true,
+        }
+      })
+      if (data?.url) {
+        window.open(data.url, '_blank')
+      }
+      return { data, error }
+    } else {
+      // Web/PWA/Capacitor: Standard redirect
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      })
+      return { data, error: error as AuthError | null }
+    }
   }
   const signOut = async () => { await supabase.auth.signOut(); setUser(null) }
 

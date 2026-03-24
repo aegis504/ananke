@@ -14,7 +14,7 @@ if (!gotTheLock) {
   app.quit();
 }
 
-app.on('second-instance', () => {
+app.on('second-instance', (event, commandLine, workingDirectory) => {
   if (!mainWindow) {
     return;
   }
@@ -24,7 +24,42 @@ app.on('second-instance', () => {
   }
   mainWindow.show();
   mainWindow.focus();
+
+  // Handle Windows deep link (e.g. ananke://auth/callback#access_token=...)
+  const deepLink = commandLine.find(arg => arg.startsWith('ananke://'));
+  if (deepLink) {
+    handleDeepLink(deepLink);
+  }
 });
+
+// Handle macOS deep link
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  handleDeepLink(url);
+});
+
+function handleDeepLink(url) {
+  if (mainWindow) {
+    try {
+      const urlObj = new URL(url);
+      const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
+      
+      // We pass the hash (which contains the Supabase session tokens) back to the React app
+      if (urlObj.hash) {
+        mainWindow.loadURL(startUrl + '/' + urlObj.hash);
+      }
+    } catch {}
+  }
+}
+
+// Register the custom protocol ananke://
+if (process.defaultApp) {
+  if (process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('ananke', process.execPath, [path.resolve(process.argv[1])]);
+  }
+} else {
+  app.setAsDefaultProtocolClient('ananke');
+}
 
 app.setAppUserModelId('com.ananke.app');
 
@@ -49,6 +84,14 @@ function createWindow() {
 
   const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
   mainWindow.loadURL(startUrl);
+
+  // Intercept window.open to open URLs securely in the user's external default browser instead of an Electron popup
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (url.startsWith('https://') || url.startsWith('http://')) {
+      import('electron').then(({ shell }) => shell.openExternal(url));
+    }
+    return { action: 'deny' };
+  });
 
   mainWindow.webContents.on('before-input-event', (event, input) => {
     const key = input.key?.toUpperCase();
