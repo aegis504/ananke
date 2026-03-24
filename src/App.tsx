@@ -33,9 +33,14 @@ const PAGE_TO_PATH: Record<string, string> = Object.fromEntries(
 )
 
 function getInitialState(): { view: View; sharedId: string | null; dashPage: string | null } {
-  const path = window.location.pathname
+  let path = window.location.pathname
   const params = new URLSearchParams(window.location.search)
   const shared = params.get('shared')
+
+  // Fix for Capacitor/Android: when running locally from a file:// or capacitor:// schema, default to root
+  if (window.location.protocol === 'file:' || window.location.protocol.includes('capacitor')) {
+    path = '/'
+  }
 
   if (shared) return { view: 'shared', sharedId: shared, dashPage: null }
   if (path === '/admin') return { view: 'admin', sharedId: null, dashPage: null }
