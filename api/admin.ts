@@ -27,6 +27,27 @@ export default async function handler(req: Request) {
     return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403, headers: cors })
   }
 
+  // Fetch actual user list from Supabase Auth Admin API
+  const usersRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
+    headers: {
+      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
+      'apikey': SERVICE_ROLE_KEY,
+    }
+  })
+
+  let allUsers = []
+  if (usersRes.ok) {
+    const data = await usersRes.json()
+    // Depending on Supabase version, it might return { users: [] } or just []
+    const rawUsers = data.users || data || []
+    allUsers = rawUsers.map((u: any) => ({
+      id: u.id,
+      email: u.email,
+      created_at: u.created_at,
+      last_sign_in_at: u.last_sign_in_at
+    })).sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  }
+
   // Count users using service role key
   const countRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?select=count`, {
     headers: {
@@ -38,7 +59,7 @@ export default async function handler(req: Request) {
   })
 
   const contentRange = countRes.headers.get('content-range') || ''
-  const total = parseInt(contentRange.split('/')[1] || '0', 10)
+  const total = parseInt(contentRange.split('/')[1] || '0', 10) || allUsers.length
 
   // Also get recent signups (last 7 days)
   const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
@@ -56,6 +77,7 @@ export default async function handler(req: Request) {
   return new Response(JSON.stringify({
     totalUsers: total,
     newUsersThisWeek: recentTotal,
+    users: allUsers,
     generatedAt: new Date().toISOString()
   }), { status: 200, headers: { ...cors, 'Content-Type': 'application/json' } })
 }
