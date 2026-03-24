@@ -69,20 +69,27 @@ export default async function handler(req: Request) {
 
     const prompts: Record<string, string> = {
       summarize: `Summarize the following text concisely. Write 3-5 clear bullet points capturing the most important information. No introduction, just the bullet points:\n\n${safeContent}`,
-      quiz: `You are a study quiz generator. Create exactly 5 multiple-choice questions based on this content. Each question tests understanding of key concepts.
+      quiz: `You are a study quiz generator. Create exactly 5 multiple-choice questions based on this content. Each question must test understanding of key concepts.
 
-FORMAT RULES (follow exactly):
-1. What is [question]?
-A) [option]
-B) [option]
-C) [option]
-D) [option]
-Answer: [letter]
+FORMAT RULES (CRITICAL - follow exactly):
+1. [Question text here]?
+A) [First option]
+B) [Second option]
+C) [Third option]
+D) [Fourth option]
+Answer: [Correct Letter]
 
-2. [next question]
-A) ...
+2. [Next question text here]?
+...
 
-Make questions progressively harder. Include one tricky question. Always mark the correct answer on a separate "Answer: X" line after each question.
+RULES:
+- Start every question with its number (1., 2., etc.) on a NEW line.
+- Provide exactly 4 options (A, B, C, D) for EVERY question.
+- Mark the correct answer with "Answer: X" on a separate line after the options.
+- DO NOT always make A the correct answer. Randomize the correct option.
+- Make questions progressively harder. Include one tricky question.
+- Do not add any introduction or conclusion text. Only the questions.
+- Write the questions in the same language as the content provided.
 
 Content to quiz on:
 ${safeContent}`,

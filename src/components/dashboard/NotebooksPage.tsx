@@ -130,7 +130,7 @@ export function NotebooksPage({ notebooks, notes, loading, onAddNotebook, onDele
               <div className="w-8 h-8 rounded-lg flex items-center justify-center text-base" style={{ backgroundColor: (nb.color || '#4f46e5') + '20' }}>📓</div>
               <span className="flex-1 text-[15px] font-medium text-text">{nb.name}</span>
               <span className="w-24 text-right text-[13px] text-text-muted">{getNoteCount(nb.id)}</span>
-              <span className="w-32 text-right text-[13px] text-text-muted">{new Date(nb.updated_at).toLocaleDateString()}</span>
+              <span className="w-32 text-right text-[13px] text-text-muted">{fmtDate(nb.updated_at)}</span>
               <div className="w-10 flex justify-end">
                 <button onClick={e => { e.stopPropagation(); onDeleteNotebook(nb.id) }} className="opacity-0 group-hover:opacity-100 text-text-muted hover:text-danger cursor-pointer p-1"><Trash2 size={14} /></button>
               </div>

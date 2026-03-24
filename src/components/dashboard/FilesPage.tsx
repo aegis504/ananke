@@ -26,29 +26,50 @@ const displayName = (name: string) => name.replace(/^\d+_/, '')
 // Parse quiz from AI response
 function parseQuiz(raw: string): QuizQuestion[] {
   const questions: QuizQuestion[] = []
-  const blocks = raw.split(/\n(?=\d+[\.\)])/).filter(b => b.trim())
+  // Split by number followed by . or ) at start of line or after newline
+  const blocks = raw.split(/(?:\r?\n|^)(?=\d+[\.\)])/).filter(b => b.trim())
+  
   for (const block of blocks) {
     const lines = block.trim().split('\n').map(l => l.trim()).filter(Boolean)
     if (lines.length < 3) continue
+    
+    // First line is usually the question
     const qLine = lines[0].replace(/^\d+[\.\)]\s*/, '')
     const opts: string[] = []
-    let correct = 0
+    let correctIdx = -1
+    
     for (let i = 1; i < lines.length; i++) {
-      const m = lines[i].match(/^([A-D])[\.\)]\s*(.+?)(\s*[✓✔★\*]*\s*(?:\(correct\)|\(answer\)|✓|✔|\*)?)?$/i)
-      if (m) {
-        opts.push(m[2].trim())
-        if (lines[i].match(/[✓✔★\*]|\(correct\)|\(answer\)/i)) correct = opts.length - 1
+      const line = lines[i]
+      // Match A) Option or A. Option
+      const optMatch = line.match(/^([A-D])[\.\)]\s*(.+)$/i)
+      if (optMatch) {
+        const optionText = optMatch[2].replace(/[\*✓✔★]|\(correct\)|\(answer\)/i, '').trim()
+        opts.push(optionText)
+        // Check if this line itself has a correct marker
+        if (line.match(/[\*✓✔★]|\(correct\)|\(answer\)/i)) {
+          correctIdx = opts.length - 1
+        }
+      }
+      
+      // Check for standalone "Answer: X" line
+      const ansMatch = line.match(/^(?:Answer|Correct)\s*[:=]\s*([A-D])/i)
+      if (ansMatch) {
+        correctIdx = 'ABCD'.indexOf(ansMatch[1].toUpperCase())
       }
     }
-    // Also check for "Answer: X" or "Correct: X" line
-    const ansLine = lines.find(l => /^(?:answer|correct)\s*[:=]\s*([A-D])/i.test(l))
-    if (ansLine) {
-      const am = ansLine.match(/([A-D])/i)
-      if (am) correct = 'ABCD'.indexOf(am[1].toUpperCase())
+    
+    // If no correct answer was found, default to 0 but only if we have options
+    if (correctIdx === -1 && opts.length > 0) correctIdx = 0 
+    
+    if (qLine && opts.length >= 2) {
+      questions.push({ 
+        question: qLine, 
+        options: opts.slice(0, 4), // capped at 4
+        correct: Math.max(0, Math.min(correctIdx, opts.length - 1))
+      })
     }
-    if (qLine && opts.length >= 2) questions.push({ question: qLine, options: opts, correct })
   }
-  return questions
+  return questions.slice(0, 10) // capped at 10 questions
 }
 
 export function FilesPage() {

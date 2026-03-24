@@ -26,8 +26,10 @@ export function useAI() {
         body: JSON.stringify({ action, content }),
       })
       if (!res.ok) {
-        const err = await res.json()
-        throw new Error(err.error || `Failed (${res.status})`)
+        const text = await res.text()
+        let errMsg = `Failed (${res.status})`
+        try { const parsed = JSON.parse(text); errMsg = parsed.error || parsed.message || errMsg } catch {}
+        throw new Error(errMsg)
       }
       const data: AIResult = await res.json()
       setLoading(false)
