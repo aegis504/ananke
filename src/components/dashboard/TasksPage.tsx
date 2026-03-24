@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Task } from '../../hooks/useTasks'
+import { useTaskNotifications } from '../../hooks/useTaskNotifications'
 import { Search, Plus, ChevronDown, ChevronRight, Trash2, Check, X, Clock, AlertTriangle, Tag } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '../ui/Button'
@@ -18,6 +19,7 @@ type Tab = 'All' | 'Today' | 'Upcoming' | 'Completed'
 const suggestedTags = ['urgent', 'important', 'work', 'personal', 'school', 'health', 'finance', 'project']
 
 export function TasksPage({ tasks, loading, onAddTask, onCompleteTask, onDeleteTask, onUpdateTask: _onUpdateTask }: Props) {
+  useTaskNotifications(tasks)
   const [tab, setTab] = useState<Tab>('All')
   const [search, setSearch] = useState('')
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
