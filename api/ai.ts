@@ -163,12 +163,37 @@ Only output the rewritten text:\n\n${safeContent}`,
       }
     }
 
+    // ── Gemini fallback ─────────────────────────────────────────────
     if (!response || !response.ok) {
+      try {
+        const geminiRes = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [
+                { role: 'user', parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }
+              ],
+              generationConfig: { maxOutputTokens: 2000, temperature: 0.7 }
+            })
+          }
+        )
+        if (geminiRes.ok) {
+          const gData = await geminiRes.json()
+          const result = gData.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.'
+          return new Response(JSON.stringify({ result, model: 'gemini-2.0-flash', usage: null }), {
+            status: 200, headers: { ...cors, 'Content-Type': 'application/json' }
+          })
+        }
+      } catch { /* Gemini also failed — fall through to error */ }
+
       if (apiErrorData) {
-         return new Response(JSON.stringify({ error: apiErrorData.error?.message || apiErrorData.message || apiErrorData.error || `AI Error: ${response?.status}`, details: apiErrorData }), { status: response?.status || 502, headers: { ...cors, 'Content-Type': 'application/json' } })
+        return new Response(JSON.stringify({ error: apiErrorData.error?.message || apiErrorData.message || apiErrorData.error || `AI Error: ${response?.status}`, details: apiErrorData }), { status: response?.status || 502, headers: { ...cors, 'Content-Type': 'application/json' } })
       }
       return new Response(JSON.stringify({ error: 'AI API unavailable', details: fallbackError?.message }), { status: 502, headers: { ...cors, 'Content-Type': 'application/json' } })
     }
+    // ────────────────────────────────────────────────────────────────
 
     const data = await response.json()
     const result = data.choices?.[0]?.message?.content || 'No response generated.'
