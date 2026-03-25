@@ -70,9 +70,14 @@ export function Download() {
                   </Button>
                 </div>
               ) : p.name === 'iOS' ? (
-                <a href="#" onClick={e => { e.preventDefault(); alert('On iPhone: open ananke.vercel.app in Safari → tap Share (□↑) → "Add to Home Screen"') }} className="mt-4 w-full">
-                  <Button variant="premium" size="sm" className="w-full bg-[#00a82d] hover:bg-[#00a82d]/80 text-white border-transparent">Get iOS App</Button>
-                </a>
+                <div className="mt-4 w-full flex flex-col gap-2">
+                  <a href="https://github.com/aegis504/ananke/releases/download/ios-latest/Ananke.ipa" className="w-full">
+                    <Button variant="premium" size="sm" className="w-full bg-[#00a82d] hover:bg-[#00a82d]/80 text-white border-transparent">Download IPA</Button>
+                  </a>
+                  <Button variant="ghost" size="sm" className="w-full text-[12px]" onClick={() => alert('On iPhone: open ananke.vercel.app in Safari → tap Share (□↑) → "Add to Home Screen"')}>
+                    Install from browser
+                  </Button>
+                </div>
               ) : (
                 <Button variant="ghost" size="sm" className="mt-4 w-full" disabled>Coming Q4 2026</Button>
               )}
