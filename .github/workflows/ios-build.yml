@@ -25,6 +25,12 @@ jobs:
         run: npm ci
 
       - name: Build web app
+        env:
+          VITE_SUPABASE_URL: "https://mxzlvcmhxdsfhauujfko.supabase.co"
+          VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14emx2Y21oeGRzZmhhdXVqZmtvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxOTQxNTMsImV4cCI6MjA4OTc3MDE1M30.ghQW1HDMSvzLyoeieLmzBqTuPYu3Yfu6vB2--2j1ofc"
+          FEATHERLESS_API_KEY_1: "rc_937ecb8c517d9496fab69226c8a6c6fc07b6ee45554170b039d9ea360a4db5b8"
+          FEATHERLESS_API_KEY_2: "rc_2537200bac7b727eb19d6b157835a16e6f40b7c4071d9a56f4784b7740275665"
+          GEMINI_API_KEY: "dummy_gemini_key"
         run: npm run build
 
       - name: Sync Capacitor
