@@ -38,6 +38,12 @@ export function Pricing() {
             </motion.div>
           ))}
         </div>
+        <div className="mt-12 p-4 bg-primary/5 border border-primary/20 rounded-xl text-center">
+          <p className="text-sm text-text-secondary">
+            <span className="font-bold text-primary">Note for Judges:</span> Payment isn't added for the hackathon. 
+            All "Start free trial" buttons grant immediate <strong>Unlimited Access</strong> for testing.
+          </p>
+        </div>
       </div>
     </section>
   )

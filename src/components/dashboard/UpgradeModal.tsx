@@ -32,7 +32,7 @@ export function UpgradeModal({ onClose }: Props) {
                   <span className="text-[11px] text-text-muted">{p.period}</span>
                 </div>
                 <p className="text-[12px] text-text-secondary mt-1 mb-4">{p.desc}</p>
-                <Button variant={p.disabled ? 'ghost' : 'premium'} size="sm" className="w-full mb-4" disabled={p.disabled}>{p.btn}</Button>
+                <Button variant={p.disabled ? 'ghost' : 'premium'} size="sm" className="w-full mb-4" disabled={p.disabled} onClick={onClose}>{p.disabled ? p.btn : 'Upgrade (Demo)'}</Button>
                 <ul className="flex-1 space-y-2">
                   {p.features.map(f => (
                     <li key={f} className="flex items-start gap-2 text-[12px] text-text-secondary leading-[1.4]">
@@ -42,6 +42,12 @@ export function UpgradeModal({ onClose }: Props) {
                 </ul>
               </div>
             ))}
+          </div>
+          <div className="mt-8 p-4 bg-primary/5 border border-primary/10 rounded-xl text-center">
+            <p className="text-[12px] text-text-secondary">
+              <span className="font-bold text-primary">Hackathon Mode:</span> Payment isn't added. 
+              All accounts have <strong>Unlimited Premium Access</strong> for judging.
+            </p>
           </div>
         </div>
       </motion.div>

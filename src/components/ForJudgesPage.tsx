@@ -206,8 +206,8 @@ export function ForJudgesPage({ onNavigate }: Props) {
                 <li className="flex gap-4">
                   <div className="w-8 h-8 rounded-full bg-[#00a82d] flex items-center justify-center shrink-0 font-bold text-[14px]">1</div>
                   <div>
-                    <h4 className="font-bold text-[16px] mb-1">Onboarding & First Task</h4>
-                    <p className="text-[14px] text-white/70">Sign up and set a task with a deadline **2 minutes away**. Watch the notification system kick in as the deadline nears.</p>
+                    <h4 className="font-bold text-[16px] mb-1">Onboarding & Unlimited Access</h4>
+                    <p className="text-[14px] text-white/70">Sign up and note the <span className="text-[#32de84] font-bold tracking-tight">PRO</span> badge. Payment is disabled for this hackathon—all judges have <strong>Unlimited Access</strong> to premium features.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">

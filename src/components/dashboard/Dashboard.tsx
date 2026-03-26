@@ -171,14 +171,29 @@ export function Dashboard({ user, onSignOut, initialPage, onPageChange }: Props)
             <ChevronLeft size={18} className={`transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} />
             {!sidebarCollapsed && <span className="text-[15px]">Collapse</span>}
           </button>
+          
+          {/* Plan Info */}
+          {!sidebarCollapsed && (
+            <div className="mx-2 mb-2 p-3 rounded-xl bg-primary/5 border border-primary/10">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Pro Plan</span>
+                <span className="text-[10px] text-text-sidebar/40">Unlimited</span>
+              </div>
+              <div className="h-1 w-full bg-primary/10 rounded-full overflow-hidden">
+                <div className="h-full bg-primary w-[100%]" />
+              </div>
+              <p className="mt-2 text-[10px] text-text-sidebar/50 font-medium">Judge Access Enabled</p>
+            </div>
+          )}
 
           {/* User */}
           {!sidebarCollapsed && (
             <div className="flex items-center gap-3 px-3.5 py-2.5 mt-1">
               <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-semibold">{userName[0].toUpperCase()}</div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[15px] font-medium text-text-sidebar truncate">{profile?.full_name || user.email}</p>
-              </div>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-[15px] font-medium text-text-sidebar truncate">{profile?.full_name || user.email}</p>
+                  <span className="px-1.5 py-0.5 rounded-md bg-primary text-white text-[9px] font-bold tracking-tighter shadow-sm">PRO</span>
+                </div>
               <button onClick={() => setShowNotifs(!showNotifs)} className="text-text-sidebar/40 hover:text-text-sidebar cursor-pointer relative">
                 <Bell size={22} />
                 {unreadCount > 0 && <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-danger text-white text-[8px] font-bold rounded-full flex items-center justify-center">{unreadCount}</span>}
