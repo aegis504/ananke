@@ -42,13 +42,18 @@ function handleDeepLink(url) {
   if (mainWindow) {
     try {
       const urlObj = new URL(url);
-      const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
+      const hash = urlObj.hash || (url.includes('#') ? '#' + url.split('#')[1] : '');
       
-      // We pass the hash (which contains the Supabase session tokens) back to the React app
-      if (urlObj.hash) {
-        mainWindow.loadURL(startUrl + '/' + urlObj.hash);
+      if (hash) {
+        // If the window is already loaded, we can try to just send the hash or use loadURL
+        // For simplicity and to ensure Supabase catches it on a clean state, we use loadURL
+        // but we ensure the pathing is correct.
+        const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
+        mainWindow.loadURL(`${startUrl}/${hash}`);
       }
-    } catch {}
+    } catch (e) {
+      console.error('Failed to handle deep link:', e);
+    }
   }
 }
 

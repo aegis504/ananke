@@ -9,6 +9,31 @@ export function useAuth() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => { setUser(session?.user ?? null); setLoading(false) })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => { setUser(session?.user ?? null); setLoading(false) })
+
+    // Setup Deep Link Listener for Mobile
+    const setupDeepLink = async () => {
+      const isCapacitor = (window as any).Capacitor?.isNative
+      if (isCapacitor) {
+        const { App } = await import('@capacitor/app')
+        App.addListener('appUrlOpen', async (event) => {
+          if (event.url.includes('auth/callback')) {
+            // Convert custom scheme to something URL can parse to extract hash
+            const urlStr = event.url.replace('ananke://', 'https://ananke.vercel.app/')
+            const url = new URL(urlStr)
+            if (url.hash) {
+              const params = new URLSearchParams(url.hash.substring(1))
+              const access_token = params.get('access_token')
+              const refresh_token = params.get('refresh_token')
+              if (access_token && refresh_token) {
+                await supabase.auth.setSession({ access_token, refresh_token })
+              }
+            }
+          }
+        })
+      }
+    }
+    setupDeepLink()
+
     return () => subscription.unsubscribe()
   }, [])
 
@@ -21,11 +46,10 @@ export function useAuth() {
     return { data, error: error as AuthError | null }
   }
   const signInWithGoogle = async () => {
-    // Detect if we're running inside the Electron desktop app
     const isElectron = navigator.userAgent.toLowerCase().includes('electron')
+    const isCapacitor = (window as any).Capacitor?.isNative
 
-    if (isElectron) {
-      // Desktop: Get the URL, redirect back via deep link, and open in external default browser
+    if (isElectron || isCapacitor) {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -34,11 +58,15 @@ export function useAuth() {
         }
       })
       if (data?.url) {
-        window.open(data.url, '_blank')
+        if (isCapacitor) {
+          const { Browser } = await import('@capacitor/browser')
+          await Browser.open({ url: data.url })
+        } else {
+          window.open(data.url, '_blank')
+        }
       }
       return { data, error }
     } else {
-      // Web/PWA/Capacitor: Standard redirect
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo: window.location.origin }
