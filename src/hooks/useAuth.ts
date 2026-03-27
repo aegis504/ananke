@@ -15,21 +15,31 @@ export function useAuth() {
       const isCapacitor = (window as any).Capacitor?.isNative
       if (isCapacitor) {
         const { App } = await import('@capacitor/app')
-        App.addListener('appUrlOpen', async (event) => {
-          if (event.url.includes('auth/callback')) {
-            // Convert custom scheme to something URL can parse to extract hash
-            const urlStr = event.url.replace('ananke://', 'https://ananke.vercel.app/')
-            const url = new URL(urlStr)
+        const { Browser } = await import('@capacitor/browser')
+
+        const handleUrl = async (urlStr: string) => {
+          if (urlStr.includes('auth/callback')) {
+            const normalizedUrl = urlStr.replace('ananke://', 'https://ananke.vercel.app/')
+            const url = new URL(normalizedUrl)
             if (url.hash) {
               const params = new URLSearchParams(url.hash.substring(1))
               const access_token = params.get('access_token')
               const refresh_token = params.get('refresh_token')
               if (access_token && refresh_token) {
                 await supabase.auth.setSession({ access_token, refresh_token })
+                // On some platforms the browser stays open, try to close it
+                await Browser.close().catch(() => {})
               }
             }
           }
-        })
+        }
+
+        // Handle URL when app is already open
+        App.addListener('appUrlOpen', (event) => handleUrl(event.url))
+
+        // Handle URL when app is launched from a deep link
+        const launchUrl = await App.getLaunchUrl()
+        if (launchUrl?.url) handleUrl(launchUrl.url)
       }
     }
     setupDeepLink()
