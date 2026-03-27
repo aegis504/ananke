@@ -139,6 +139,7 @@ export function ForJudgesPage({ onNavigate }: Props) {
                 { name: 'Vite', detail: 'HMR-optimized build pipeline' },
                 { name: 'Framer Motion', detail: 'Gesture-driven micro-interactions' },
                 { name: 'Capacitor 6', detail: 'Native mobile bridge with Swift/Java' },
+                { name: 'Mobbin', detail: 'Core UI/UX inspiration source' },
               ]} 
               color="#00a82d" 
             />
@@ -157,7 +158,7 @@ export function ForJudgesPage({ onNavigate }: Props) {
               category="Artificial Intelligence" 
               icon={<Sparkles size={20} />}
               items={[
-                { name: 'Mobin Featherless', detail: 'Featherless API only' },
+                { name: 'Featherless', detail: 'Featherless API only' },
                 { name: 'Qwen 2.5 7B', detail: 'Local-grade model with 32k context' },
                 { name: 'Multi-Key Fallback', detail: 'Automatic key rotation resilience' },
                 { name: 'Prompt Engineering', detail: 'Structured JSON output enforcement' },
