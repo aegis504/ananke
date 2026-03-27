@@ -317,6 +317,28 @@ export function SettingsPage({ user, profile, dark, toggleTheme, onSignOut, onUp
                 </div>
               </div>
               <div className="bg-bg-card border border-border rounded-2xl p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-bold text-text">Ananke Public API</h3>
+                  <Button variant="ghost" size="sm" className="text-primary hover:text-primary-hover">Documentation</Button>
+                </div>
+                <div className="p-4 rounded-xl bg-bg-alt border border-border space-y-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase font-bold text-text-muted tracking-widest">Client ID</span>
+                    <div className="flex items-center gap-2">
+                      <code className="text-[13px] font-mono bg-white px-2 py-1 rounded border border-border flex-1">ananke_live_9f2...</code>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[11px] uppercase font-bold text-text-muted tracking-widest">API Secret</span>
+                    <div className="flex items-center gap-2">
+                      <code className="text-[13px] font-mono bg-white px-2 py-1 rounded border border-border flex-1">••••••••••••••••••••••••</code>
+                      <Button variant="ghost" size="sm">Reveal</Button>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[12px] text-text-muted italic">Use these credentials to connect your custom n8n nodes or external automation scripts directly to your productivity data.</p>
+              </div>
+              <div className="bg-bg-card border border-border rounded-2xl p-6 space-y-4">
                 <h3 className="text-lg font-bold text-text">Execution Log</h3>
                 <div className="space-y-2">
                   {[
