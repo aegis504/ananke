@@ -55,9 +55,9 @@ export function ForJudgesPage({ onNavigate }: Props) {
               icon="🌐" 
               name="Web / Desktop" 
               tagline="Primary Entry Point"
-              labelA="Vibecoded with"
-              valA="CREO"
-              labelB="Target"
+              labelA="Framework"
+              valA="Creo"
+              labelB="Deployment"
               valB="Vercel & Electron"
               accent="#00a82d"
             />
@@ -68,16 +68,16 @@ export function ForJudgesPage({ onNavigate }: Props) {
               labelA="Managed with"
               valA="Switch"
               labelB="Packaged with"
-              valB="Devs Warn"
+              valB="Dev Swarm"
               accent="#32de84"
             />
             <PlatformCard 
               icon="🍎" 
               name="iOS" 
               tagline="Apple Ecosystem"
-              labelA="Made with"
+              labelA="Built with"
               valA="Creo"
-              labelB="Packaged with"
+              labelB="Target"
               valB="Xcode"
               accent="#000000"
             />
@@ -157,7 +157,7 @@ export function ForJudgesPage({ onNavigate }: Props) {
               category="Artificial Intelligence" 
               icon={<Sparkles size={20} />}
               items={[
-                { name: 'Featherless AI', detail: 'High-speed model inference' },
+                { name: 'Mobin Featherless', detail: 'Featherless API only' },
                 { name: 'Qwen 2.5 7B', detail: 'Local-grade model with 32k context' },
                 { name: 'Multi-Key Fallback', detail: 'Automatic key rotation resilience' },
                 { name: 'Prompt Engineering', detail: 'Structured JSON output enforcement' },
