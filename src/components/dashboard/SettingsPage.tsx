@@ -285,7 +285,7 @@ export function SettingsPage({ user, profile, dark, toggleTheme, onSignOut, onUp
             <div className="space-y-6">
               <div className="bg-bg-card border border-border rounded-2xl p-6 space-y-5">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-text">n8n Automation</h2>
+                  <h2 className="text-xl font-bold text-text">n8n</h2>
                   <span className="px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold uppercase tracking-wider border border-success/20">Active</span>
                 </div>
                 <p className="text-[15px] text-text-secondary">Orchestrate aggressive notification 'nag-loops' and cross-platform data synchronization via n8n specialized workflows.</p>

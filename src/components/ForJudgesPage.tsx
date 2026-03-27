@@ -171,7 +171,7 @@ export function ForJudgesPage({ onNavigate }: Props) {
                 { name: 'Google Calendar', detail: 'Bi-directional event synchronization' },
                 { name: 'Electron', detail: 'Standardized desktop distribution' },
                 { name: 'Deep Linking', detail: 'Custom ananke:// protocol handler' },
-                { name: 'n8n Automation', detail: 'Workflow orchestration for aggressive nag-loops' },
+                { name: 'n8n', detail: 'Workflow orchestration for aggressive nag-loops' },
                 { name: 'Service Workers', detail: 'Persistence & notification logic' },
               ]} 
               color="#f59e0b" 
