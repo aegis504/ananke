@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { User, Mail, Lock, Bell, Moon, Sun, Globe, Trash2, LogOut, Camera, Loader2, Check, Shield, Calendar as CalendarIcon, Unlink, Link2 } from 'lucide-react'
+import { User, Mail, Lock, Bell, Moon, Sun, Globe, Trash2, LogOut, Camera, Loader2, Check, Shield, Calendar as CalendarIcon, Unlink, Link2, Zap, Sparkles } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { Button } from '../ui/Button'
 
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export function SettingsPage({ user, profile, dark, toggleTheme, onSignOut, onUpdateProfile }: Props) {
-  const [tab, setTab] = useState<'profile' | 'account' | 'notifications' | 'calendar' | 'appearance'>('profile')
+  const [tab, setTab] = useState<'profile' | 'account' | 'notifications' | 'calendar' | 'appearance' | 'workflows'>('profile')
   const [fullName, setFullName] = useState(profile?.full_name || '')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -52,6 +52,7 @@ export function SettingsPage({ user, profile, dark, toggleTheme, onSignOut, onUp
     { id: 'account', label: 'Account', icon: <Shield size={18} /> },
     { id: 'notifications', label: 'Notifications', icon: <Bell size={18} /> },
     { id: 'calendar', label: 'Calendar', icon: <CalendarIcon size={18} /> },
+    { id: 'workflows', label: 'Workflows', icon: <Zap size={18} /> },
     { id: 'appearance', label: 'Appearance', icon: dark ? <Moon size={18} /> : <Sun size={18} /> },
   ] as const
 
@@ -277,6 +278,58 @@ export function SettingsPage({ user, profile, dark, toggleTheme, onSignOut, onUp
               <div className="border-t border-border pt-5">
                 <p className="text-[13px] font-semibold text-text-muted uppercase tracking-wider mb-3">Sidebar</p>
                 <p className="text-[15px] text-text-secondary">The sidebar can be collapsed by clicking the "Collapse" button at the bottom of the sidebar, or using the keyboard shortcut.</p>
+              </div>
+            </div>
+          )}
+          {tab === 'workflows' && (
+            <div className="space-y-6">
+              <div className="bg-bg-card border border-border rounded-2xl p-6 space-y-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-text">n8n Automation</h2>
+                  <span className="px-2 py-0.5 rounded-full bg-success/10 text-success text-[11px] font-bold uppercase tracking-wider border border-success/20">Active</span>
+                </div>
+                <p className="text-[15px] text-text-secondary">Orchestrate aggressive notification 'nag-loops' and cross-platform data synchronization via n8n specialized workflows.</p>
+                <div className="p-4 rounded-xl bg-bg-alt border border-border space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-white border border-border flex items-center justify-center p-1.5 shadow-sm overflow-hidden text-danger font-black text-xs">
+                      n8n
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-base font-semibold text-text">Workflow Webhook</p>
+                      <p className="text-[13px] text-text-muted font-mono tracking-tight truncate">https://n8n.ananke.productivity/webhook/6a5f7...</p>
+                    </div>
+                    <Button variant="ghost" size="sm" className="shrink-0">Regenerate</Button>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-[13px] font-semibold text-text-muted uppercase tracking-wider">Active Workflows</p>
+                  {[
+                    { name: 'Deadline Escalation Engine', status: 'Running', icon: <Zap size={14} className="text-primary" /> },
+                    { name: 'Multi-Device State Sync', status: 'Idle', icon: <Globe size={14} className="text-success" /> },
+                    { name: 'AI-Powered Ingestion Pipeline', status: 'Running', icon: <Sparkles size={14} className="text-accent" /> },
+                  ].map(w => (
+                    <div key={w.name} className="flex items-center gap-3 p-3 rounded-xl bg-bg-alt/50 border border-border/50">
+                      {w.icon}
+                      <span className="text-[14px] font-medium text-text flex-1">{w.name}</span>
+                      <span className="text-[12px] text-text-muted">{w.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="bg-bg-card border border-border rounded-2xl p-6 space-y-4">
+                <h3 className="text-lg font-bold text-text">Execution Log</h3>
+                <div className="space-y-2">
+                  {[
+                    { time: '2m ago', msg: 'Successful escalation: Project Y Deadline' },
+                    { time: '14m ago', msg: 'Triggered: New PDF Ingestion' },
+                    { time: '45m ago', msg: 'Workflow check: No pending nag-loops' },
+                  ].map(l => (
+                    <div key={l.time} className="flex items-center justify-between text-[13px] text-text-muted py-1 border-b border-border/30 last:border-0">
+                      <span className="font-medium text-text-secondary">{l.msg}</span>
+                      <span className="text-[11px] opacity-60 italic shrink-0">{l.time}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
