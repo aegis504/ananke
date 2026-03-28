@@ -104,6 +104,9 @@ function App() {
           setView('dashboard')
         }
       })
+    } else if (!user && !loading && (view === 'dashboard' || view === 'onboarding')) {
+      // User signed out, redirect to landing
+      setView('landing')
     }
   }, [user, loading])
 

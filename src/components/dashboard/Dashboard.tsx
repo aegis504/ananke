@@ -9,6 +9,7 @@ import { useCalendarEvents } from '../../hooks/useCalendarEvents'
 import { useTheme } from '../../hooks/useTheme'
 import { usePushNotifications } from '../../hooks/usePushNotifications'
 import { Bell, LogOut, User as UserIcon, Search, Sun, Moon, Home, Zap, FileText, CheckSquare, FolderOpen, Calendar, LayoutTemplate, BookOpen, Tag, Users, Plus, Settings, ChevronLeft, X, Trash2, CheckCheck, Sparkles, MoreHorizontal } from 'lucide-react'
+import { Logo } from '../Logo'
 import { HomePage } from './HomePage'
 import { NotesPage } from './NotesPage'
 import { TasksPage } from './TasksPage'
@@ -208,7 +209,10 @@ export function Dashboard({ user, onSignOut, initialPage, onPageChange }: Props)
         {/* Top bar */}
         <header className="flex items-center justify-between px-6 h-14 border-b border-border/60 bg-bg shrink-0">
           <div className="flex items-center gap-3">
-            <button onClick={() => setPage('home')} className="sm:hidden text-text-muted hover:text-text cursor-pointer"><Home size={20} /></button>
+            <button onClick={() => setPage('home')} className="sm:hidden text-text-muted hover:text-text cursor-pointer flex items-center gap-2">
+              <Logo size={24} />
+              <span className="text-[17px] font-bold text-text">Ananke</span>
+            </button>
           </div>
           <div className="flex items-center gap-4">
             <button onClick={toggleTheme} className="sm:hidden text-text-muted hover:text-text cursor-pointer p-1">{dark ? <Sun size={18} /> : <Moon size={18} />}</button>

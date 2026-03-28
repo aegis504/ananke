@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { Sparkles, Send, X, Loader2, Bot, User as UserIcon, Trash2 } from 'lucide-react'
+import { Logo } from '../Logo'
+import { Send, X, Loader2, Bot, User as UserIcon, Trash2 } from 'lucide-react'
 
 interface Message {
   id: string
@@ -79,12 +80,9 @@ export function AIAssistant({ open, onClose }: Props) {
     <div className="fixed right-0 top-0 bottom-0 w-full sm:w-[380px] z-50 flex flex-col bg-bg-card border-l border-border shadow-2xl">
       {/* Header */}
       <div className="px-5 py-4 border-b border-border flex items-center gap-3 shrink-0">
-        <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center">
-          <Sparkles size={20} className="text-accent" />
-        </div>
+        <Logo size={24} />
         <div className="flex-1">
-          <h3 className="text-base font-semibold text-text">AI Assistant</h3>
-          <p className="text-[12px] text-text-muted">Powered by Ananke AI</p>
+          <h3 className="text-base font-bold text-text">Ananke</h3>
         </div>
         <button onClick={clearChat} className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-bg-alt cursor-pointer" title="Clear chat"><Trash2 size={16} /></button>
         <button onClick={onClose} className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-bg-alt cursor-pointer"><X size={18} /></button>
