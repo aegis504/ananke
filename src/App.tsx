@@ -89,6 +89,22 @@ function App() {
   }, [])
 
   useEffect(() => {
+    // Detect if we have a session in the hash (from a redirect)
+    // and if we might need to "relay" it to the desktop app
+    if (window.location.hash.includes('access_token=')) {
+      const isDesktop = !(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
+      const isElectron = navigator.userAgent.toLowerCase().includes('electron')
+      
+      if (isDesktop && !isElectron) {
+        // We are in a web browser, but we have a login token.
+        // Try to trigger the desktop app deep link as a fail-safe.
+        const deepLinkUrl = `ananke://auth/callback${window.location.hash}`
+        window.location.href = deepLinkUrl
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (view === 'shared' || view === 'judges') return
     if (user) {
       supabase.from('profiles').select('intent').eq('id', user.id).single().then(({ data }) => {
