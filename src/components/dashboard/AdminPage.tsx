@@ -30,7 +30,7 @@ export function AdminPage() {
         setLoading(false)
         return
       }
-      const res = await fetch('/api/admin', {
+      const res = await fetch('https://ananke.vercel.app/api/admin', {
         headers: { 'Authorization': `Bearer ${session.access_token}` }
       })
       if (!res.ok) {

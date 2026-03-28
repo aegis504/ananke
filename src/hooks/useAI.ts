@@ -7,6 +7,8 @@ interface AIResult {
   usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number }
 }
 
+const API_URL = 'https://ananke.vercel.app/api/ai'
+
 export function useAI() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -17,7 +19,7 @@ export function useAI() {
     setError(null)
     try {
       const { data: { session } } = await supabase.auth.getSession()
-      const res = await fetch('/api/ai', {
+      const res = await fetch(API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

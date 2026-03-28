@@ -246,20 +246,20 @@ export function FilesPage() {
     return (
       <div className="h-full flex flex-col">
         {/* Header */}
-        <div className="flex items-center gap-4 px-6 py-4 border-b border-border bg-bg shrink-0">
+        <div className="flex flex-wrap items-center gap-3 px-4 sm:px-6 py-4 border-b border-border bg-bg shrink-0">
           <button onClick={() => setOpenFile(null)} className="flex items-center gap-2 text-text-muted hover:text-text cursor-pointer transition-colors">
-            <ArrowLeft size={20} /> <span className="text-[15px]">Back to Files</span>
+            <ArrowLeft size={20} /> <span className="text-[15px] hidden sm:inline">Back</span>
           </button>
           <div className="flex-1 flex items-center gap-3 min-w-0">
             {typeIcon(openFile.type, 24)}
-            <h2 className="text-xl font-bold text-text truncate">{displayName(openFile.name)}</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-text truncate">{displayName(openFile.name)}</h2>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium bg-bg-alt text-text-muted">
-              <Lock size={13} /> Private — share to generate link
+          <div className="flex items-center gap-2 ml-auto">
+            <span className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-medium bg-bg-alt text-text-muted">
+              <Lock size={12} /> Private
             </span>
-            <button onClick={() => setShowShare(!showShare)} className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-white text-[15px] font-medium hover:bg-primary-hover cursor-pointer transition-colors">
-              <Share2 size={16} /> Share
+            <button onClick={() => setShowShare(!showShare)} className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-primary text-white text-[14px] font-medium hover:bg-primary-hover cursor-pointer transition-colors">
+              <Share2 size={14} /> Share
             </button>
             {openFile.url && <a href={openFile.url} target="_blank" rel="noopener noreferrer" className="p-2 rounded-xl text-text-muted hover:text-primary hover:bg-bg-alt transition-colors"><Download size={18} /></a>}
             <button onClick={() => { deleteFile(openFile) }} className="p-2 rounded-xl text-text-muted hover:text-danger hover:bg-danger/5 cursor-pointer transition-colors"><Trash2 size={18} /></button>
@@ -317,10 +317,10 @@ export function FilesPage() {
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-[900px] mx-auto py-6 px-6">
             {/* File info bar */}
-            <div className="flex items-center gap-6 mb-6 text-[14px] text-text-muted">
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-6 text-[13px] sm:text-[14px] text-text-muted">
               <span className="flex items-center gap-1.5"><HardDrive size={14} /> {formatSize(openFile.size)}</span>
-              <span className="flex items-center gap-1.5"><Clock size={14} /> {new Date(openFile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-              <span>{openFile.type}</span>
+              <span className="flex items-center gap-1.5"><Clock size={14} /> {new Date(openFile.created_at).toLocaleDateString()}</span>
+              <span className="truncate max-w-[150px]">{openFile.type}</span>
             </div>
 
             {/* Image preview */}
@@ -348,7 +348,7 @@ export function FilesPage() {
                 <h3 className="text-[13px] font-bold text-text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
                   <Sparkles size={14} className="text-accent" /> Study & AI Tools
                 </h3>
-                <div className="grid grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {aiActions.map(a => (
                     <button key={a.id} onClick={() => handleAI(a.id)} disabled={ai.loading}
                       className={`flex flex-col items-center gap-2 px-3 py-4 rounded-xl border text-center cursor-pointer transition-all disabled:opacity-40 ${activeAction === a.id ? 'ring-2 ring-accent scale-[0.98]' : ''} ${a.color}`}>
@@ -554,9 +554,9 @@ export function FilesPage() {
         <div className="border border-border rounded-2xl bg-bg-card overflow-hidden">
           <div className="flex items-center gap-4 px-5 py-3 border-b border-border bg-bg-alt/50">
             <span className="flex-1 text-[13px] font-semibold text-text-muted uppercase tracking-wider">Name</span>
-            <span className="w-20 text-right text-[13px] font-semibold text-text-muted uppercase tracking-wider">Size</span>
-            <span className="w-28 text-right text-[13px] font-semibold text-text-muted uppercase tracking-wider">Added</span>
-            <span className="w-20" />
+            <span className="hidden sm:block w-20 text-right text-[13px] font-semibold text-text-muted uppercase tracking-wider">Size</span>
+            <span className="hidden sm:block w-28 text-right text-[13px] font-semibold text-text-muted uppercase tracking-wider">Added</span>
+            <span className="w-10 sm:w-20" />
           </div>
           {files.map(f => (
             <div key={f.id} onClick={() => openFilePage(f)}
@@ -564,12 +564,12 @@ export function FilesPage() {
               <div className="w-10 h-10 rounded-xl bg-bg-alt flex items-center justify-center shrink-0">{typeIcon(f.type, 22)}</div>
               <div className="flex-1 min-w-0">
                 <p className="text-base text-text font-medium truncate">{displayName(f.name)}</p>
-                <p className="text-[13px] text-text-muted">{f.type}</p>
+                <p className="text-[13px] text-text-muted truncate">{f.type === 'application/octet-stream' ? 'Binary' : f.type}</p>
               </div>
-              <span className="w-20 text-right text-[15px] text-text-muted">{formatSize(f.size)}</span>
-              <span className="w-28 text-right text-[15px] text-text-muted">{new Date(f.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-              <div className="w-20 flex justify-end gap-1.5">
-                <button onClick={e => { e.stopPropagation(); deleteFile(f) }} className="p-2 rounded-lg text-text-muted hover:text-danger hover:bg-danger/10 transition-colors opacity-0 group-hover:opacity-100"><Trash2 size={16} /></button>
+              <span className="hidden sm:block w-20 text-right text-[15px] text-text-muted">{formatSize(f.size)}</span>
+              <span className="hidden sm:block w-28 text-right text-[15px] text-text-muted">{new Date(f.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              <div className="w-10 sm:w-20 flex justify-end gap-1.5">
+                <button onClick={e => { e.stopPropagation(); deleteFile(f) }} className="p-2 rounded-lg text-text-muted hover:text-danger hover:bg-danger/10 transition-colors sm:opacity-0 group-hover:opacity-100"><Trash2 size={16} /></button>
               </div>
             </div>
           ))}

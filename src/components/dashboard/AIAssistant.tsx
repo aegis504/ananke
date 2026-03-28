@@ -13,6 +13,8 @@ interface Props {
   onClose: () => void
 }
 
+const API_URL = 'https://ananke.vercel.app/api/ai';
+
 export function AIAssistant({ open, onClose }: Props) {
   const [messages, setMessages] = useState<Message[]>([
     { id: '0', role: 'assistant', content: "Hi! I'm your Ananke AI assistant. I can help you with:\n\n• Organizing your tasks and to-do lists\n• Suggesting tags for notes\n• Planning your calendar\n• Writing and editing content\n• Study tips and quizzes\n\nHow can I help you today?", timestamp: new Date() }
@@ -32,7 +34,7 @@ export function AIAssistant({ open, onClose }: Props) {
 
     try {
       const { data: { session } } = await (await import('../../lib/supabase')).supabase.auth.getSession()
-      const res = await fetch('/api/ai', {
+      const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {}) },
         body: JSON.stringify({
