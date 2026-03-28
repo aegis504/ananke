@@ -44,6 +44,14 @@
 	"build": {
 		"appId": "com.ananke.app",
 		"productName": "Ananke",
+		"protocols": [
+			{
+				"name": "Ananke Deep Link",
+				"schemes": [
+					"ananke"
+				]
+			}
+		],
 		"directories": {
 			"output": "release"
 		},

@@ -40,16 +40,18 @@ app.on('open-url', (event, url) => {
 
 function handleDeepLink(url) {
   if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+
     try {
-      const urlObj = new URL(url);
-      const hash = urlObj.hash || (url.includes('#') ? '#' + url.split('#')[1] : '');
+      // url example: ananke://auth/callback#access_token=...
+      const hash = url.includes('#') ? '#' + url.split('#')[1] : '';
       
       if (hash) {
-        // If the window is already loaded, we can try to just send the hash or use loadURL
-        // For simplicity and to ensure Supabase catches it on a clean state, we use loadURL
-        // but we ensure the pathing is correct.
         const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
-        mainWindow.loadURL(`${startUrl}/${hash}`);
+        const finalUrl = `${startUrl}/${hash}`;
+        mainWindow.loadURL(finalUrl);
       }
     } catch (e) {
       console.error('Failed to handle deep link:', e);
