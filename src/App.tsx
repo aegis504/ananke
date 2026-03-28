@@ -93,12 +93,13 @@ function App() {
     if (user) {
       supabase.from('profiles').select('intent').eq('id', user.id).single().then(({ data }) => {
         const profile = data as ProfileRow | null
-        if (!profile?.intent) {
-          setView('onboarding')
-        } else if (view === 'signin' || view === 'signup') {
-          // Only redirect away from auth pages when logged in
-          setView('dashboard')
-        } else if (initial.dashPage) {
+        if (view === 'signin' || view === 'signup') {
+          if (!profile?.intent) {
+            setView('onboarding')
+          } else {
+            setView('dashboard')
+          }
+        } else if (initial.dashPage && view !== 'dashboard' && view !== 'onboarding') {
           // User navigated directly to a dashboard URL like /notes, /tasks
           setView('dashboard')
         }

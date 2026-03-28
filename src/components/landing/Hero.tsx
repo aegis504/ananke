@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { Button } from '../ui/Button'
-interface Props { onLaunch: () => void }
+interface Props { onLaunch: () => void; isLoggedIn?: boolean }
 
-export function Hero({ onLaunch }: Props) {
+export function Hero({ onLaunch, isLoggedIn }: Props) {
   return (
     <section className="pt-24 pb-20 px-6 overflow-hidden">
       <div className="mx-auto max-w-[680px] text-center">
@@ -16,7 +16,9 @@ export function Hero({ onLaunch }: Props) {
           </p>
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, ease: 'easeOut' }} className="mt-8 flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3">
-          <Button variant="premium" size="lg" onClick={onLaunch} className="w-full sm:w-auto">Get Ananke free</Button>
+          <Button variant="premium" size="lg" onClick={onLaunch} className="w-full sm:w-auto">
+            {isLoggedIn ? 'Launch app' : 'Get Ananke free'}
+          </Button>
           <Button variant="ghost" size="lg" className="w-full sm:w-auto">See plans</Button>
         </motion.div>
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="mt-4 text-[13px] text-text-muted">

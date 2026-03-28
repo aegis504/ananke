@@ -8,5 +8,5 @@ import { Footer } from './Footer'
 interface Props { onNavigate: (v: string) => void; isLoggedIn: boolean }
 
 export function LandingPage({ onNavigate, isLoggedIn }: Props) {
-  return (<div className="min-h-screen bg-bg"><Navbar onNavigate={onNavigate} isLoggedIn={isLoggedIn} /><Hero onLaunch={() => onNavigate('signup')} /><Features /><Pricing /><Download /><Footer /></div>)
+  return (<div className="min-h-screen bg-bg"><Navbar onNavigate={onNavigate} isLoggedIn={isLoggedIn} /><Hero onLaunch={() => onNavigate(isLoggedIn ? 'dashboard' : 'signup')} isLoggedIn={isLoggedIn} /><Features /><Pricing /><Download /><Footer /></div>)
 }
