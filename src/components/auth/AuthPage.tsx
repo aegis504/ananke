@@ -48,9 +48,15 @@ export function AuthPage({ mode, onNavigate }: Props) {
 
     setLoading(true)
     if (mode === 'signup') {
-      const { error: err } = await signUp(email, password, fullName)
+      const { data, error: err } = await signUp(email, password, fullName)
       if (err) setError(err.message)
-      else { setSuccess('Check your email to confirm!'); resetRateLimit(key) }
+      else if (data?.session) {
+        setSuccess('Account created! Signing you in...')
+        resetRateLimit(key)
+      } else {
+        setSuccess('Check your email to confirm!')
+        resetRateLimit(key)
+      }
     } else {
       const { error: err } = await signIn(email, password)
       if (err) {
