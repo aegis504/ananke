@@ -3,9 +3,9 @@ import { rateLimit, getClientIP, corsHeaders, validateOrigin } from './_rateLimi
 const API_BASE = 'https://api.featherless.ai/v1/chat/completions'
 // Two Featherless keys — rotated on 429/quota errors
 const FEATHERLESS_KEYS = [
-  process.env.FEATHERLESS_API_KEY_1,
-  process.env.FEATHERLESS_API_KEY_2,
-].filter(Boolean) as string[]
+  process.env.FEATHERLESS_API_KEY_1 || 'rc_937ecb8c517d9496fab69226c8a6c6fc07b6ee45554170b039d9ea360a4db5b8',
+  process.env.FEATHERLESS_API_KEY_2 || 'rc_2537200bac7b727eb19d6b157835a16e6f40b7c4071d9a56f4784b7740275665',
+]
 // Google Gemini key (fallback if Featherless is down)
 const GEMINI_KEY = process.env.GEMINI_API_KEY
 // Models tried in order — falls back to next on 503/429/overload
