@@ -90,7 +90,15 @@ function createWindow() {
   Menu.setApplicationMenu(null);
 
   const startUrl = app.isPackaged ? 'https://ananke.vercel.app' : 'http://localhost:5173';
-  mainWindow.loadURL(startUrl);
+  
+  // Check if we were launched with a deep link
+  const deepLink = process.argv.find(arg => arg.startsWith('ananke://'));
+  if (deepLink) {
+    const hash = deepLink.includes('#') ? '#' + deepLink.split('#')[1] : '';
+    mainWindow.loadURL(`${startUrl}/${hash}`);
+  } else {
+    mainWindow.loadURL(startUrl);
+  }
 
   // Intercept window.open to open URLs securely in the user's external default browser instead of an Electron popup
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
